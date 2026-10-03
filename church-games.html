@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>العاب كنيستنا ⛪</title>
+<link rel="icon" type="image/png" href="church-games-icon-192.png">
+<link rel="apple-touch-icon" href="church-games-icon-192.png">
+<link rel="manifest" href="church-games-manifest.json">
+<meta name="theme-color" content="#0b1c33">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0b1c33;
+    --navy-deep:#071224;
+    --gold:#cfa243;
+    --gold-light:#e8caa0;
+    --cream:#f3ead9;
+    --maroon:#6e1f2a;
+    --teal:#154a48;
+    --ink:#1c150b;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    font-family:'Tajawal',sans-serif;
+    background:var(--navy-deep);
+    color:var(--cream);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.serif{font-family:'Amiri',serif;}
+
+  /* ===== Radiant Christ-symbol background ===== */
+  .sacred-bg{
+    position:fixed; inset:0; z-index:-1;
+    background:
+      radial-gradient(circle at 50% 32%, rgba(207,162,67,0.35), transparent 45%),
+      radial-gradient(circle at 50% 32%, rgba(232,202,160,0.15), transparent 60%),
+      linear-gradient(180deg, #0d2340 0%, #071224 55%, #050c17 100%);
+  }
+  .sacred-bg svg{position:absolute; top:6%; left:50%; transform:translateX(-50%); opacity:0.5; width:min(70vw,420px);}
+
+  .screen{display:none; min-height:100vh; padding:28px 18px 60px; position:relative;}
+  .screen.active{display:flex; flex-direction:column; align-items:center;}
+
+  .wrap{width:100%; max-width:560px;}
+
+  /* ===== Login ===== */
+  .login-card{
+    margin-top:8vh; background:rgba(11,28,51,0.55); border:1px solid rgba(207,162,67,0.5);
+    border-radius:18px; padding:34px 26px; text-align:center; backdrop-filter:blur(3px);
+    box-shadow:0 0 40px rgba(207,162,67,0.12);
+  }
+  .cross-mark{font-size:40px; color:var(--gold); margin-bottom:6px;}
+  .login-card h1{font-size:28px; color:var(--gold-light); margin:0 0 4px;}
+  .login-card p.sub{color:#c9c2ae; font-size:14px; margin:0 0 26px;}
+  label{display:block; text-align:right; font-size:14px; color:var(--gold-light); margin:14px 0 6px;}
+  input[type=text]{
+    width:100%; padding:12px 14px; border-radius:10px; border:1px solid rgba(207,162,67,0.5);
+    background:rgba(255,255,255,0.06); color:var(--cream); font-family:'Tajawal',sans-serif; font-size:15px;
+  }
+  input[type=text]:focus{outline:2px solid var(--gold);}
+  .btn{
+    display:inline-block; margin-top:22px; padding:12px 34px; border:none; border-radius:999px;
+    background:linear-gradient(135deg,var(--gold),#a9782f); color:var(--ink); font-weight:700; font-size:16px;
+    cursor:pointer; font-family:'Tajawal',sans-serif; transition:transform .15s ease;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn.secondary{background:transparent; border:1px solid var(--gold); color:var(--gold-light);}
+  .btn.wide{width:100%;}
+  .btn:disabled{opacity:.5; cursor:not-allowed;}
+
+  /* ===== Home ===== */
+  .verse-banner{
+    width:100%; text-align:center; background:rgba(207,162,67,0.12); border:1px solid rgba(207,162,67,0.4);
+    border-radius:14px; padding:14px 18px; margin-bottom:22px; font-family:'Amiri',serif; font-size:17px; color:var(--gold-light);
+    line-height:1.9;
+  }
+  .welcome-head{text-align:center; margin-bottom:6px;}
+  .welcome-head h1{font-size:26px; margin:0 0 2px; color:var(--cream);}
+  .welcome-head p{margin:0; color:var(--gold-light); font-size:14px;}
+
+  .nav-card{
+    display:flex; align-items:center; gap:16px; width:100%;
+    background:linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    border:1px solid rgba(207,162,67,0.45); border-radius:16px; padding:18px 20px; margin-top:16px;
+    cursor:pointer; text-align:right; transition:transform .15s ease, border-color .15s ease;
+  }
+  .nav-card:hover{transform:translateY(-3px); border-color:var(--gold);}
+  .nav-card .icon{font-size:30px; flex-shrink:0;}
+  .nav-card .txt h3{margin:0 0 3px; font-size:18px; color:var(--gold-light);}
+  .nav-card .txt p{margin:0; font-size:13px; color:#c9c2ae;}
+
+  .topbar{width:100%; display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;}
+  .back-btn{
+    background:none; border:1px solid rgba(207,162,67,0.5); color:var(--gold-light); border-radius:999px;
+    padding:8px 18px; cursor:pointer; font-family:'Tajawal',sans-serif; font-size:14px;
+  }
+  .page-title{font-size:20px; color:var(--cream); margin:0; text-align:center; flex:1;}
+
+  /* ===== Puzzle ===== */
+  .puzzle-grid{display:grid; grid-template-columns:repeat(3,100px); grid-template-rows:repeat(3,100px); gap:3px; margin:10px auto; background:rgba(0,0,0,0.3); padding:4px; border-radius:10px;}
+  .tile{width:100px; height:100px; background-size:300px 300px; cursor:pointer; border-radius:6px; border:2px solid transparent;}
+  .tile.selected{border-color:var(--gold);}
+  .status-msg{text-align:center; margin-top:14px; font-size:16px; color:var(--gold-light); min-height:24px;}
+
+  /* ===== Memory ===== */
+  .memory-grid{display:grid; grid-template-columns:repeat(4,70px); gap:8px; margin:10px auto;}
+  .mcard{
+    width:70px; height:70px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+    font-size:28px; cursor:pointer; background:linear-gradient(135deg,#1b3358,#0f2036); border:1px solid rgba(207,162,67,0.4);
+    user-select:none;
+  }
+  .mcard.flipped{background:linear-gradient(135deg,var(--gold-light),var(--gold)); color:var(--ink);}
+  .mcard.matched{opacity:0.35; cursor:default;}
+  .mcounter{text-align:center; color:var(--gold-light); font-size:14px; margin-bottom:6px;}
+
+  /* ===== Guess saint / saints quiz ===== */
+  .avatar-circle{
+    width:110px; height:110px; border-radius:50%; margin:0 auto 16px; display:flex; align-items:center; justify-content:center;
+    font-size:44px; font-family:'Amiri',serif; color:#fff; border:3px solid var(--gold);
+  }
+  .bio-box{
+    background:rgba(255,255,255,0.05); border:1px solid rgba(207,162,67,0.35); border-radius:14px;
+    padding:18px; font-size:15px; line-height:2; color:var(--cream); text-align:center; margin-bottom:16px;
+  }
+  .feedback{text-align:center; font-size:15px; margin-top:10px; min-height:44px;}
+  .feedback.ok{color:#8fd19e;}
+  .feedback.bad{color:#e08b8b;}
+
+  /* ===== Quiz ===== */
+  .quiz-top{width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+  .timer{
+    font-family:'Amiri',serif; font-size:22px; background:rgba(207,162,67,0.15); border:1px solid var(--gold);
+    border-radius:999px; padding:6px 20px; color:var(--gold-light);
+  }
+  .qcount{font-size:13px; color:#c9c2ae;}
+  .question-box{width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(207,162,67,0.35); border-radius:14px; padding:20px;}
+  .qtype-tag{font-size:12px; color:var(--gold); margin-bottom:8px;}
+  .qtext{font-size:17px; line-height:1.9; margin-bottom:18px; color:var(--cream);}
+  .options{display:flex; flex-direction:column; gap:10px;}
+  .opt-btn{
+    text-align:right; padding:12px 16px; border-radius:10px; border:1px solid rgba(207,162,67,0.4);
+    background:rgba(255,255,255,0.04); color:var(--cream); cursor:pointer; font-family:'Tajawal',sans-serif; font-size:15px;
+  }
+  .opt-btn:hover{border-color:var(--gold); background:rgba(207,162,67,0.12);}
+  .fill-row{display:flex; gap:8px;}
+  .fill-row input{flex:1;}
+
+  .result-card{text-align:center; margin-top:30px;}
+  .result-card .score{font-size:52px; color:var(--gold-light); font-family:'Amiri',serif; margin:14px 0;}
+  .intro-card{text-align:center; background:rgba(255,255,255,0.05); border:1px solid rgba(207,162,67,0.4); border-radius:16px; padding:28px 22px;}
+  .intro-card h2{color:var(--gold-light); font-size:22px; margin-bottom:6px;}
+  .intro-card p{color:#c9c2ae; font-size:14px;}
+
+  @media (max-width:380px){
+    .memory-grid{grid-template-columns:repeat(4,62px);}
+    .mcard{width:62px; height:62px; font-size:24px;}
+  }
+
+  :root{--fs:1;--bg1:#0d2340;--bg2:#071224;--bg3:#050c17;--glow:207,162,67;}
+  .sacred-bg{background:radial-gradient(circle at 50% 32%, rgba(var(--glow),.35), transparent 45%),linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 55%,var(--bg3) 100%); overflow:hidden; transition:background .6s;}
+  .sacred-bg svg{animation:pulse 6s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:.45; transform:translateX(-50%) scale(1);}50%{opacity:.75; transform:translateX(-50%) scale(1.05);}}
+  .rays{position:absolute; top:32%; left:50%; width:160vmax; height:160vmax; margin:-80vmax 0 0 -80vmax; border-radius:50%;
+    background:repeating-conic-gradient(rgba(var(--glow),.12) 0 6deg, transparent 6deg 16deg);
+    -webkit-mask-image:radial-gradient(circle,#000 0,transparent 55%); mask-image:radial-gradient(circle,#000 0,transparent 55%);
+    animation:spin 120s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .star{position:absolute; bottom:-12px; border-radius:50%; background:rgba(var(--glow),.9); box-shadow:0 0 8px rgba(var(--glow),.8); opacity:0; animation:rise linear infinite;}
+  @keyframes rise{0%{transform:translateY(0); opacity:0;}10%{opacity:.9;}100%{transform:translateY(-112vh); opacity:0;}}
+  .screen{zoom:var(--fs); padding-top:64px;}
+  .topctl{position:fixed; top:0; left:0; right:0; z-index:50; display:flex; justify-content:space-between; padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px; pointer-events:none;}
+  .ctl{pointer-events:auto; width:42px; height:42px; border-radius:50%; border:1px solid rgba(207,162,67,.55); background:rgba(11,28,51,.75); color:var(--gold-light); font-size:20px; cursor:pointer; visibility:hidden;}
+  .ctl.show{visibility:visible;}
+  .credit{margin-top:44px; text-align:center; font-size:11px; color:#a9a28d; opacity:.8;}
+  .bg-opts{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:6px 0 4px;}
+  .bg-opt{width:62px; height:62px; border-radius:12px; border:2px solid transparent; cursor:pointer; color:#fff; font-size:11px; font-family:'Tajawal',sans-serif; display:flex; align-items:flex-end; justify-content:center; padding-bottom:4px;}
+  .bg-opt.sel{border-color:var(--gold);}
+  .fs-row{display:flex; align-items:center; justify-content:center; gap:16px; margin-top:6px;}
+  .fs-row .btn{margin-top:0; padding:8px 20px;}
+  .best-line{color:var(--gold-light); font-size:16px; margin:6px 0;}
+  .cheer{margin:16px auto 6px; max-width:420px; background:rgba(207,162,67,.12); border:1px solid rgba(207,162,67,.45); border-radius:14px; padding:14px 16px; font-family:'Amiri',serif; font-size:18px; line-height:1.9; color:var(--gold-light);}
+  .searchbar{display:flex; gap:8px; width:100%;}
+  .searchbar input{flex:1;}
+  .searchbar .btn{margin-top:0; padding:10px 18px;}
+  .search-msg{min-height:0; margin:6px 0 10px; font-size:14px; color:#e8caa0; text-align:center;}
+  .chip{display:inline-block; margin:4px; padding:6px 14px; border-radius:999px; border:1px solid var(--gold); background:rgba(207,162,67,.12); color:var(--gold-light); cursor:pointer; font-family:'Tajawal',sans-serif; font-size:13px;}
+  .hero-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%; margin-top:14px;}
+  .hero-btn{padding:14px 8px; min-height:64px; border-radius:12px; border:1px solid rgba(207,162,67,.45); background:rgba(255,255,255,.05); color:var(--cream); font-family:'Tajawal',sans-serif; font-size:14px; line-height:1.5; cursor:pointer;}
+  .hero-btn:hover{border-color:var(--gold); background:rgba(207,162,67,.12);}
+  .hero-btn.soon{opacity:.55;}
+  .avatar-circle{overflow:hidden;}
+  .avatar-circle svg{width:100%; height:100%; display:block;}
+  .blessing{margin-top:18px; text-align:center; font-family:'Amiri',serif; font-size:18px; color:var(--gold-light); line-height:1.9;}
+  .story-text{text-align:right; white-space:pre-line;}
+
+  /* ===== Logo ===== */
+  .logo-img{display:block; width:min(62vw,230px); height:auto; margin:0 auto 14px; border-radius:20px; border:1px solid rgba(207,162,67,.5); box-shadow:0 0 30px rgba(207,162,67,.25);}
+  .logo-img.small{width:min(46vw,160px); margin-bottom:10px;}
+</style>
+</head>
+<body>
+
+<div class="sacred-bg" id="sacredBg"></div>
+<div class="topctl">
+  <button class="ctl" id="btnBack" onclick="goBack()" aria-label="رجوع">→</button>
+  <button class="ctl" id="btnMenu" onclick="openSettings()" aria-label="الإعدادات">⋮</button>
+</div>
+
+<!-- ================= LOGIN ================= -->
+<div class="screen active" id="screen-login">
+  <div class="wrap">
+    <div class="login-card">
+      <img class="logo-img" src="church-games-logo.jpg" alt="العاب كنيستنا">
+      <p class="sub">اهلا بيك.. قبل ما تبدأ محتاجين نعرف عليك</p>
+      <label>ما هو اسمك؟</label>
+      <input type="text" id="inpName" placeholder="اكتب اسمك هنا">
+      <label>ما اسم كنيستك؟</label>
+      <input type="text" id="inpChurch" placeholder="اكتب اسم كنيستك هنا">
+      <div><button class="btn" id="btnEnter" onclick="doLogin()">ادخل</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= HOME ================= -->
+<div class="screen" id="screen-home">
+  <div class="wrap">
+    <img class="logo-img small" src="church-games-logo.jpg" alt="العاب كنيستنا">
+    <div class="searchwrap">
+      <div class="searchbar"><input type="text" placeholder="🔍 ابحث عن قديس أو شهيد" onkeydown="if(event.key==='Enter')doSearch(this)"><button class="btn" onclick="doSearch(this)">بحث</button></div>
+      <div class="search-msg"></div>
+    </div>
+    <div class="welcome-head">
+      <h1 id="welcomeText">مرحبا</h1>
+      <p id="churchText"></p>
+    </div>
+    <div class="verse-banner" id="verseBanner"></div>
+
+    <div class="nav-card" onclick="showScreen('screen-games-home')">
+      <div class="icon">⛪</div>
+      <div class="txt"><h3>العاب كنيستنا ⛪</h3><p>بازل وذاكرة وصور قديسين وشهداء</p></div>
+    </div>
+    <div class="nav-card" onclick="startQuizIntro()">
+      <div class="icon">📖</div>
+      <div class="txt"><h3>أسئلة كتابنا المقدس 📖</h3><p>مسابقة عن اصحاح من الكتاب المقدس</p></div>
+    </div>
+    <div class="nav-card" onclick="openSaintsQuiz()">
+      <div class="icon">👑</div>
+      <div class="txt"><h3>سير القديسين الابرار</h3><p>تعرف على سيرة قديسينا الأبرار</p></div>
+    </div>
+    <div class="nav-card" onclick="openHeroes()">
+      <div class="icon">🏆</div>
+      <div class="txt"><h3>قصص أبطال كنيستنا</h3><p>سير 100 قديس وشهيد</p></div>
+    </div>
+    <div class="nav-card" onclick="openRiteIntro()">
+      <div class="icon">🎶</div>
+      <div class="txt"><h3>طقوس وألحان كنيستنا</h3><p>امتحان 10 أسئلة في 10 دقائق</p></div>
+    </div>
+    <div class="credit">إعداد أندرو أيمن 2027</div>
+  </div>
+</div>
+
+<!-- ================= SETTINGS ================= -->
+<div class="screen" id="screen-settings">
+  <div class="wrap">
+    <h2 class="page-title" style="margin-bottom:16px">⚙️ الإعدادات</h2>
+    <div class="intro-card" style="text-align:right">
+      <label>اسمك</label><input type="text" id="setName">
+      <label>اسم كنيستك</label><input type="text" id="setChurch">
+      <label>خلفية البرنامج</label><div class="bg-opts" id="bgOpts"></div>
+      <label>حجم الخط</label>
+      <div class="fs-row"><button class="btn secondary" onclick="changeFs(0.1)">أ +</button><span id="fsVal"></span><button class="btn secondary" onclick="changeFs(-0.1)">أ −</button></div>
+      <div style="text-align:center"><button class="btn wide" onclick="saveSettingsForm()">حفظ</button></div>
+      <div class="feedback ok" id="setMsg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= RITES INTRO ================= -->
+<div class="screen" id="screen-rite-intro">
+  <div class="wrap">
+    <div class="intro-card">
+      <h2>🎶 طقوس وألحان كنيستنا</h2>
+      <p>10 أسئلة عن الألحان والطقس الكنسي في مدة 10 دقائق</p>
+      <div class="best-line" id="riteBestIntro"></div>
+      <button class="btn" onclick="startRite()">ابدأ الامتحان</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= RITES QUIZ ================= -->
+<div class="screen" id="screen-rite-quiz">
+  <div class="wrap">
+    <div class="quiz-top"><span class="qcount" id="rCount"></span><span class="timer" id="rTimer">10:00</span></div>
+    <div class="question-box">
+      <div class="qtype-tag">طقوس وألحان 🎶</div>
+      <div class="qtext" id="rText"></div>
+      <div class="options" id="rOptions"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= RITES RESULT ================= -->
+<div class="screen" id="screen-rite-result">
+  <div class="wrap">
+    <div class="result-card">
+      <h2 id="riteTitle" style="color:var(--gold-light); font-size:24px;"></h2>
+      <p style="color:#c9c2ae; margin:0;">نتيجتك الحالية</p>
+      <div class="score" id="riteScore"></div>
+      <div class="best-line" id="riteBest"></div>
+      <div class="cheer" id="riteCheer"></div>
+      <button class="btn" onclick="showScreen('screen-home')">الرئيسية</button>
+      <button class="btn secondary" style="margin-right:10px;" onclick="startRite()">حاول مرة اخرى</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= HEROES ================= -->
+<div class="screen" id="screen-heroes">
+  <div class="wrap">
+    <h2 class="page-title" style="margin-bottom:14px">🏆 قصص أبطال كنيستنا</h2>
+    <div class="searchwrap">
+      <div class="searchbar"><input type="text" placeholder="🔍 ابحث عن قديس أو شهيد" onkeydown="if(event.key==='Enter')doSearch(this)"><button class="btn" onclick="doSearch(this)">بحث</button></div>
+      <div class="search-msg"></div>
+    </div>
+    <div class="hero-grid" id="heroGrid"></div>
+  </div>
+</div>
+<div class="screen" id="screen-hero-story">
+  <div class="wrap">
+    <div class="avatar-circle" id="heroAvatar"></div>
+    <h2 class="page-title" id="heroName" style="margin-bottom:14px"></h2>
+    <div class="bio-box story-text" id="heroStory"></div>
+    <div class="blessing" id="heroBless"></div>
+  </div>
+</div>
+
+<!-- ================= GAMES HOME ================= -->
+<div class="screen" id="screen-games-home">
+  <div class="wrap">
+    <div class="topbar">
+      <button class="back-btn" onclick="showScreen('screen-home')">رجوع</button>
+      <h2 class="page-title">العاب كنيستنا ⛪</h2>
+      <span style="width:60px"></span>
+    </div>
+    <div class="nav-card" onclick="openPuzzle()">
+      <div class="icon">🧩</div>
+      <div class="txt"><h3>بازل</h3><p>ركّب صورة الرمز المقدس</p></div>
+    </div>
+    <div class="nav-card" onclick="openMemory()">
+      <div class="icon">🃏</div>
+      <div class="txt"><h3>ذاكرة</h3><p>لعبة تذكر الأزواج المتطابقة</p></div>
+    </div>
+    <div class="nav-card" onclick="openGuess()">
+      <div class="icon">🕊️</div>
+      <div class="txt"><h3>صور قديسين والشهداء</h3><p>اقرأ السيرة واعرف من هو</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PUZZLE ================= -->
+<div class="screen" id="screen-puzzle">
+  <div class="wrap">
+    <div class="topbar">
+      <button class="back-btn" onclick="showScreen('screen-games-home')">رجوع</button>
+      <h2 class="page-title">بازل 🧩</h2>
+      <button class="back-btn" onclick="openPuzzle()">تخليط جديد</button>
+    </div>
+    <div class="puzzle-grid" id="puzzleGrid"></div>
+    <div class="status-msg" id="puzzleStatus">دوس على قطعتين عشان تبدلهم</div>
+    <div style="text-align:center"><button class="btn" id="puzNext" style="display:none" onclick="puzzleLevel++; openPuzzle();">صورة جديدة ➜</button></div>
+  </div>
+</div>
+
+<!-- ================= MEMORY ================= -->
+<div class="screen" id="screen-memory">
+  <div class="wrap">
+    <div class="topbar">
+      <button class="back-btn" onclick="showScreen('screen-games-home')">رجوع</button>
+      <h2 class="page-title">ذاكرة 🃏</h2>
+      <button class="back-btn" onclick="openMemory()">لعبة جديدة</button>
+    </div>
+    <div class="mcounter" id="memCounter"></div>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <div class="status-msg" id="memStatus"></div>
+  </div>
+</div>
+
+<!-- ================= GUESS SAINT (اكمل / من أنا) ================= -->
+<div class="screen" id="screen-guess">
+  <div class="wrap">
+    <div class="topbar">
+      <button class="back-btn" onclick="showScreen('screen-games-home')">رجوع</button>
+      <h2 class="page-title">من أنا؟ 🕊️</h2>
+      <span style="width:60px"></span>
+    </div>
+    <div class="avatar-circle" id="guessAvatar"></div>
+    <div class="bio-box" id="guessBio"></div>
+    <label>اكتب اسم القديس/الشهيد:</label>
+    <div class="fill-row">
+      <input type="text" id="guessInput" placeholder="من هو؟">
+      <button class="btn" onclick="checkGuess()">تأكيد</button>
+    </div>
+    <div class="feedback" id="guessFeedback"></div>
+    <button class="btn secondary wide" style="margin-top:14px; display:none;" id="guessNextBtn" onclick="openGuess()">التالي</button>
+  </div>
+</div>
+
+<!-- ================= QUIZ INTRO ================= -->
+<div class="screen" id="screen-quiz-intro">
+  <div class="wrap">
+    <div class="topbar">
+      <button class="back-btn" onclick="showScreen('screen-home')">رجوع</button>
+      <h2 class="page-title">أسئلة كتابنا المقدس 📖</h2>
+      <span style="width:60px"></span>
+    </div>
+    <div class="intro-card">
+      <h2 id="quizIntroTitle"></h2>
+      <p>30 سؤال (صح وغلط / اكمل / اختيارات) في مدة 10 دقائق</p>
+      <p style="margin-top:14px; font-size:16px; color:var(--gold-light);">هل انت مستعد للأسئلة؟</p>
+      <button class="btn" onclick="startQuiz()">ابدأ المسابقة</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= QUIZ ================= -->
+<div class="screen" id="screen-quiz">
+  <div class="wrap">
+    <div class="quiz-top">
+      <span class="qcount" id="qCount"></span>
+      <span class="timer" id="quizTimer">10:00</span>
+    </div>
+    <div class="question-box">
+      <div class="qtype-tag" id="qType"></div>
+      <div class="qtext" id="qText"></div>
+      <div class="options" id="qOptions"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= QUIZ RESULT ================= -->
+<div class="screen" id="screen-quiz-result">
+  <div class="wrap">
+    <div class="result-card">
+      <h2 id="resultTitle" style="color:var(--gold-light); font-size:24px;"></h2>
+      <div class="score" id="resultScore"></div>
+      <p id="resultSub" style="color:#c9c2ae;"></p>
+      <button class="btn" onclick="showScreen('screen-home')">الرئيسية</button>
+      <button class="btn secondary" style="margin-right:10px;" onclick="startQuizIntro()">حاول مرة اخرى</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= SAINTS BIO QUIZ ================= -->
+<div class="screen" id="screen-saints-quiz">
+  <div class="wrap">
+    <div class="topbar">
+      <button class="back-btn" onclick="showScreen('screen-home')">رجوع</button>
+      <h2 class="page-title">سير القديسين الابرار</h2>
+      <span style="width:60px"></span>
+    </div>
+    <div class="bio-box" id="saintsBio"></div>
+    <label>من هو هذا القديس/الشهيد؟</label>
+    <div class="fill-row">
+      <input type="text" id="saintsInput" placeholder="اكتب الاسم">
+      <button class="btn" id="saintsCheckBtn" onclick="checkSaintsQuiz()">تحقق</button>
+    </div>
+    <div class="feedback" id="saintsFeedback"></div>
+    <button class="btn secondary wide" style="margin-top:14px; display:none;" id="saintsNextBtn" onclick="nextSaintsQuiz()">السؤال التالي</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA
+   ============================================================ */
+const SAINTS = [
+  {name:"مارجرجس (القديس جاورجيوس)", color:"#7a3b1f",
+   bio:"جندي روماني من أصل فلسطيني، رفض إنكار إيمانه بالمسيح رغم الوعود والتهديدات من الإمبراطور، فتعرض لأنواع عذاب كثيرة قبل استشهاده، وارتبط اسمه برمزية الجهاد ضد الشر."},
+  {name:"الأنبا أنطونيوس", color:"#2f4f2f",
+   bio:"يُعرف بأب الرهبنة، سمع في الكنيسة قول الرب للشاب الغني ببيع كل ما يملك، فترك أملاكه وتوجه إلى برية مصر ليتنسك ويصلي هناك سنوات طويلة."},
+  {name:"الأنبا بولا", color:"#4a3728",
+   bio:"يُلقب بأول السواح، هرب من الاضطهاد إلى البرية الشرقية وعاش متوحدا في مغارة أكثر من ثمانين عاما، وكان يعوله غراب يحضر له الطعام."},
+  {name:"القديسة دميانة", color:"#8a2f4a",
+   bio:"عاشت في زمن الاضطهاد الروماني، وحين علمت بارتداد والدها عن الإيمان أثناء الاضطهاد ثبتت هي وأربعون عذراء معها ورفضوا إنكار المسيح فتعرضن للعذاب."},
+  {name:"مار مينا العجائبي", color:"#1f4a4a",
+   bio:"جندي مصري في الجيش الروماني ترك الخدمة العسكرية ليعلن إيمانه بالمسيح علنا، فقُبض عليه واستشهد، وصار ضريحه في مريوط مقصدا لمعجزات كثيرة."},
+  {name:"البابا أثناسيوس الرسولي", color:"#3a2f6e",
+   bio:"بطريرك الإسكندرية، عُرف بدفاعه القوي عن الإيمان القويم في وجه بدعة آريوس التي أنكرت لاهوت المسيح، ونُفي عدة مرات بسبب ثباته على الإيمان."},
+  {name:"الأنبا بيشوي", color:"#2f5a6e",
+   bio:"راهب مصري من رهبان برية شيهيت، اشتهر بمحبته العميقة للسيد المسيح حتى قيل إنه غسل قدمي الرب في ظهور له، وله كرامات كثيرة محفوظة."},
+  {name:"القديسة كاترينا", color:"#6e2f5a",
+   bio:"فتاة متعلمة من الإسكندرية، ناظرت كبار الفلاسفة الوثنيين في عهد أحد الأباطرة وأفحمتهم بحجتها، فآمن بعضهم بسببها، واستشهدت بعد تعذيب شديد."},
+  {name:"الأنبا موسى الأسود", color:"#333333",
+   bio:"كان قاطع طريق معروفا بالعنف قبل أن يتوب توبة عظيمة ويلتحق بالرهبنة، وصار من أشهر آباء البرية في التواضع والصبر على الإهانة."},
+  {name:"البابا كيرلس عمود الدين", color:"#5a3a1f",
+   bio:"بطريرك الإسكندرية، دافع بقوة عن كون القديسة العذراء مريم هي والدة الإله في مجمع أفسس، ورد على من حاول إنكار هذا اللقب عنها."}
+];
+
+const VERSES = [
+  "الله محبة",
+  "أنا هو نور العالم",
+  "الرب راعيّ فلا يعوزني شيء",
+  "اطلبوا أولا ملكوت الله وبره",
+  "تعالوا إليّ يا جميع المتعبين والثقيلي الأحمال فأنا أريحكم",
+  "أحبوا أعداءكم باركوا لاعنيكم",
+  "أنا هو الطريق والحق والحياة",
+  "الحق الحق أقول لكم من يؤمن بي فله حياة أبدية",
+  "طوبى للودعاء لأنهم يرثون الأرض",
+  "لا تهتموا للغد لأن الغد يهتم بما لنفسه",
+  "أنا معكم كل الأيام إلى انقضاء الدهر",
+  "أعطيكم وصية جديدة أن تحبوا بعضكم بعضا"
+];
+
+// 30 questions on the Gospel of John, chapter 1
+const BOOK_NAME = "إنجيل يوحنا";
+const CHAPTER_NAME = "الأصحاح الأول";
+const QUESTIONS = [
+  {type:"tf", q:"الكلمة كان في البدء عند الله.", a:"صح"},
+  {type:"tf", q:"النور الحقيقي الذي جاء إلى العالم هو يوحنا المعمدان نفسه.", a:"غلط"},
+  {type:"tf", q:"كل الذين قبلوا الكلمة أعطاهم سلطانا أن يصيروا أولاد الله.", a:"صح"},
+  {type:"tf", q:"الكلمة صار جسدا وحل بيننا.", a:"صح"},
+  {type:"tf", q:"يوحنا المعمدان قال إنه هو المسيح.", a:"غلط"},
+  {type:"tf", q:"وصف يوحنا نفسه بأنه صوت صارخ في البرية.", a:"صح"},
+  {type:"tf", q:"الكهنة واللاويون أرسلوا إلى يوحنا يسألونه من هو.", a:"صح"},
+  {type:"tf", q:"يوحنا أجاب أنه هو إيليا النبي.", a:"غلط"},
+  {type:"tf", q:"رأى يوحنا الروح القدس نازلا على يسوع مثل حمامة.", a:"صح"},
+  {type:"tf", q:"أول من تبع يسوع في هذا الأصحاح كان سمعان بطرس بنفسه قبل أخيه.", a:"غلط"},
+  {type:"fill", q:"في البدء كان ______.", a:"الكلمة"},
+  {type:"fill", q:"الكلمة كان ______ الله.", a:"عند"},
+  {type:"fill", q:"جاء يوحنا ليشهد لـ ______.", a:"النور"},
+  {type:"fill", q:"قال يوحنا: هوذا ______ الله الذي يرفع خطية العالم.", a:"حمل"},
+  {type:"fill", q:"غيّر يسوع اسم سمعان إلى ______.", a:"صفا"},
+  {type:"fill", q:"الذي دعا نثنائيل ليأتي ويرى كان اسمه ______.", a:"فيلبس"},
+  {type:"fill", q:"قال يسوع لنثنائيل: رأيتك تحت شجرة ______.", a:"التين"},
+  {type:"fill", q:"لقّب يوحنا نفسه بأنه صوت صارخ في ______.", a:"البرية"},
+  {type:"fill", q:"الذين يقبلون الكلمة يصيرون أولاد ______.", a:"الله"},
+  {type:"fill", q:"الكلمة صار ______ وحل بيننا.", a:"جسدا"},
+  {type:"mc", q:"من كتب هذا الإنجيل؟", opts:["يوحنا","متى","لوقا","مرقس"], a:"يوحنا"},
+  {type:"mc", q:"من الذي أرسل يسأل يوحنا: من أنت؟", opts:["الكهنة واللاويون","الرومان فقط","لا أحد","تلاميذ يوحنا فقط"], a:"الكهنة واللاويون"},
+  {type:"mc", q:"ماذا سمى يوحنا يسوع عندما رآه مقبلا إليه؟", opts:["حمل الله","ملك اليهود","المعلم الصالح","النبي الجديد"], a:"حمل الله"},
+  {type:"mc", q:"من هما الأخوان اللذان دعاهما يسوع في هذا الأصحاح؟", opts:["أندراوس وبطرس","يعقوب ويوحنا","فيلبس ونثنائيل","توما ومتى"], a:"أندراوس وبطرس"},
+  {type:"mc", q:"على من استقر الروح القدس؟", opts:["على يسوع","على يوحنا","على بطرس","على فيلبس"], a:"على يسوع"},
+  {type:"mc", q:"بأي هيئة نزل الروح القدس؟", opts:["كحمامة","كنار","كريح عاصفة","كسحابة نور"], a:"كحمامة"},
+  {type:"mc", q:"من الذي وجده يسوع ودعاه مباشرة ليتبعه؟", opts:["فيلبس","بطرس","أندراوس","يوحنا"], a:"فيلبس"},
+  {type:"mc", q:"ماذا قال نثنائيل عندما سمع أن يسوع من الناصرة؟", opts:["أمن ممكن أن يخرج من الناصرة شيء صالح","فرح فورا وآمن","رفض أن يذهب لرؤيته","لم يعلق بشيء"], a:"أمن ممكن أن يخرج من الناصرة شيء صالح"},
+  {type:"mc", q:"من الذي لقّب يسوع بـ ابن الله وملك إسرائيل في هذا الأصحاح؟", opts:["نثنائيل","بطرس","أندراوس","فيلبس"], a:"نثنائيل"},
+  {type:"mc", q:"ماذا يعني الاسم الذي أطلقه يسوع على سمعان (صفا)؟", opts:["صخرة","نور","حياة","كلمة"], a:"صخرة"}
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let state = {name:"", church:""};
+let quiz = {order:[], idx:0, score:0, timeLeft:600, timerId:null};
+let saintsQuizOrder = [], saintsQuizIdx = 0;
+let puzzleOrder = [], puzzleSelected = null;
+let memoryFirst = null, memoryLock = false, memoryMatched = 0;
+let currentGuessSaint = null;
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+const navStack = [];
+function showScreen(id, noPush){
+  if(!noPush){
+    if(id==='screen-home') navStack.length = 0;
+    if(navStack[navStack.length-2]===id) navStack.pop();
+    else if(navStack[navStack.length-1]!==id) navStack.push(id);
+  }
+  if(id!=='screen-quiz') clearInterval(quiz.timerId);
+  if(id!=='screen-rite-quiz') clearInterval(rite.t);
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('btnBack').classList.toggle('show', id!=='screen-login' && id!=='screen-home');
+  document.getElementById('btnMenu').classList.toggle('show', id!=='screen-login');
+  window.scrollTo(0,0);
+}
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function normalizeAr(s){
+  return (s||"")
+    .trim()
+    .replace(/[\u064B-\u0652]/g,"")   // diacritics
+    .replace(/[إأآا]/g,"ا")
+    .replace(/ى/g,"ي")
+    .replace(/ة/g,"ه")
+    .replace(/^(ال|القديس|القديسة|الانبا|الأنبا|البابا|مار)\s*/,"")
+    .replace(/\s+/g," ")
+    .toLowerCase();
+}
+function answersMatch(userAns, correctAns){
+  const u = normalizeAr(userAns), c = normalizeAr(correctAns);
+  if(!u) return false;
+  return u===c || c.includes(u) || u.includes(c);
+}
+
+/* ============================================================
+   LOGIN
+   ============================================================ */
+function doLogin(){
+  const name = document.getElementById('inpName').value.trim();
+  const church = document.getElementById('inpChurch').value.trim();
+  if(!name || !church){
+    alert("من فضلك اكتب اسمك واسم كنيستك");
+    return;
+  }
+  state.name = name; state.church = church;
+  persist(); enterHome();
+}
+
+/* ============================================================
+   SACRED BACKGROUND SVG (symbolic cross + halo, no real imagery)
+   ============================================================ */
+function christSvgMarkup(){
+  return `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="halo" cx="50%" cy="42%" r="55%">
+        <stop offset="0%" stop-color="#f3ead9"/>
+        <stop offset="55%" stop-color="#cfa243"/>
+        <stop offset="100%" stop-color="#7a5a1f" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="crossg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#f3ead9"/>
+        <stop offset="100%" stop-color="#cfa243"/>
+      </linearGradient>
+    </defs>
+    <rect width="300" height="300" fill="none"/>
+    <circle cx="150" cy="120" r="95" fill="url(#halo)"/>
+    <g stroke="#e8caa0" stroke-width="1" opacity="0.6">
+      <line x1="150" y1="10" x2="150" y2="230"/>
+      <line x1="30" y1="120" x2="270" y2="120"/>
+    </g>
+    <g fill="url(#crossg)">
+      <rect x="135" y="70" width="30" height="170" rx="6"/>
+      <rect x="90" y="115" width="120" height="30" rx="6"/>
+    </g>
+  </svg>`;
+}
+document.getElementById('sacredBg').innerHTML = christSvgMarkup();
+
+/* ============================================================
+   PUZZLE GAME
+   ============================================================ */
+function puzzleImageDataUri(){
+  const svg = PUZ_SVGS[puzzleLevel % PUZ_SVGS.length]();
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+}
+function openPuzzle(){
+  showScreen('screen-puzzle');
+  document.getElementById('puzzleStatus').textContent = "دوس على قطعتين عشان تبدلهم";
+  let order = shuffle([0,1,2,3,4,5,6,7,8]);
+  // ensure not already solved
+  while(order.every((v,i)=>v===i)) order = shuffle(order);
+  puzzleOrder = order;
+  puzzleHist = [];
+  puzzleSelected = null;
+  renderPuzzle();
+}
+function renderPuzzle(){
+  const grid = document.getElementById('puzzleGrid');
+  grid.innerHTML = "";
+  const img = puzzleImageDataUri();
+  puzzleOrder.forEach((pieceIdx, cellIdx)=>{
+    const col = pieceIdx % 3, row = Math.floor(pieceIdx/3);
+    const tile = document.createElement('div');
+    tile.className = 'tile' + (puzzleSelected===cellIdx ? ' selected':'');
+    tile.style.backgroundImage = img;
+    tile.style.backgroundPosition = `-${col*100}px -${row*100}px`;
+    tile.onclick = ()=>onTileClick(cellIdx);
+    grid.appendChild(tile);
+  });
+  document.getElementById('puzNext').style.display = puzzleOrder.every((v,i)=>v===i) ? 'inline-block' : 'none';
+}
+function onTileClick(cellIdx){
+  if(puzzleSelected===null){
+    puzzleSelected = cellIdx;
+  } else if(puzzleSelected===cellIdx){
+    puzzleSelected = null;
+  } else {
+    puzzleHist.push([puzzleSelected,cellIdx]);
+    [puzzleOrder[puzzleSelected], puzzleOrder[cellIdx]] = [puzzleOrder[cellIdx], puzzleOrder[puzzleSelected]];
+    puzzleSelected = null;
+  }
+  renderPuzzle();
+  if(puzzleOrder.every((v,i)=>v===i)){
+    document.getElementById('puzzleStatus').textContent = "🎉 برافو! رتبت الصورة صح";
+  }
+}
+
+/* ============================================================
+   MEMORY GAME
+   ============================================================ */
+const MEMORY_ICONS = ["📖","✝️","⛪","🕊️","👑","🔥","🌟","🍞"];
+function openMemory(){
+  showScreen('screen-memory');
+  memoryFirst = null; memoryLock = false; memoryMatched = 0;
+  document.getElementById('memStatus').textContent = "";
+  const pairs = shuffle([...MEMORY_ICONS, ...MEMORY_ICONS]);
+  renderMemory(pairs);
+  updateMemCounter();
+}
+function updateMemCounter(){
+  document.getElementById('memCounter').textContent = `أزواج تم إيجادها: ${memoryMatched} / ${MEMORY_ICONS.length}`;
+}
+function renderMemory(pairs){
+  const grid = document.getElementById('memoryGrid');
+  grid.innerHTML = "";
+  pairs.forEach((icon, i)=>{
+    const card = document.createElement('div');
+    card.className = 'mcard';
+    card.dataset.icon = icon;
+    card.dataset.idx = i;
+    card.textContent = "✝";
+    card.onclick = ()=>onMemoryClick(card);
+    grid.appendChild(card);
+  });
+}
+function onMemoryClick(card){
+  if(memoryLock) return;
+  if(card.classList.contains('flipped') || card.classList.contains('matched')) return;
+  card.classList.add('flipped');
+  card.textContent = card.dataset.icon;
+  if(!memoryFirst){
+    memoryFirst = card;
+    return;
+  }
+  if(memoryFirst.dataset.icon === card.dataset.icon && memoryFirst!==card){
+    memoryFirst.classList.add('matched');
+    card.classList.add('matched');
+    memoryFirst = null;
+    memoryMatched++;
+    updateMemCounter();
+    if(memoryMatched===MEMORY_ICONS.length){
+      document.getElementById('memStatus').textContent = "🎉 برافو! خلصت اللعبة";
+    }
+  } else {
+    memoryLock = true;
+    const f = memoryFirst;
+    setTimeout(()=>{
+      f.classList.remove('flipped'); f.textContent="✝";
+      card.classList.remove('flipped'); card.textContent="✝";
+      memoryFirst = null; memoryLock = false;
+    }, 700);
+  }
+}
+
+/* ============================================================
+   GUESS SAINT (من أنا - داخل الألعاب)
+   ============================================================ */
+function openGuess(){
+  showScreen('screen-guess');
+  currentGuessSaint = SAINTS[Math.floor(Math.random()*SAINTS.length)];
+  document.getElementById('guessAvatar').style.background = '#0b1c33';
+  document.getElementById('guessAvatar').innerHTML = portrait(currentGuessSaint.name);
+  document.getElementById('guessBio').innerHTML = currentGuessSaint.bio + "<br><br><b>من أنا؟</b>";
+  document.getElementById('guessInput').value = "";
+  document.getElementById('guessFeedback').textContent = "";
+  document.getElementById('guessFeedback').className = "feedback";
+  document.getElementById('guessNextBtn').style.display = "none";
+  document.getElementById('guessInput').disabled = false;
+}
+function checkGuess(){
+  const val = document.getElementById('guessInput').value;
+  const fb = document.getElementById('guessFeedback');
+  if(answersMatch(val, currentGuessSaint.name)){
+    fb.textContent = "✅ إجابة صحيحة! هو " + currentGuessSaint.name;
+    fb.className = "feedback ok";
+  } else {
+    fb.textContent = "❌ إجابتك خاطئة. الإجابة الصحيحة هي: " + currentGuessSaint.name;
+    fb.className = "feedback bad";
+  }
+  document.getElementById('guessInput').disabled = true;
+  document.getElementById('guessNextBtn').style.display = "block";
+}
+
+/* ============================================================
+   BIBLE QUIZ (timed, 30 questions)
+   ============================================================ */
+function startQuizIntro(){
+  document.getElementById('quizIntroTitle').textContent =
+    `المسابقة هتتكلم عن سفر ${BOOK_NAME} - ${CHAPTER_NAME} 📖`;
+  showScreen('screen-quiz-intro');
+}
+function startQuiz(){
+  quiz.order = shuffle(QUESTIONS.map((_,i)=>i));
+  quiz.idx = 0;
+  quiz.score = 0;
+  quiz.timeLeft = 600;
+  showScreen('screen-quiz');
+  renderQuizQuestion();
+  clearInterval(quiz.timerId);
+  quiz.timerId = setInterval(()=>{
+    quiz.timeLeft--;
+    updateQuizTimer();
+    if(quiz.timeLeft<=0){
+      clearInterval(quiz.timerId);
+      finishQuiz(true);
+    }
+  },1000);
+  updateQuizTimer();
+}
+function updateQuizTimer(){
+  const m = Math.floor(quiz.timeLeft/60).toString().padStart(2,'0');
+  const s = (quiz.timeLeft%60).toString().padStart(2,'0');
+  document.getElementById('quizTimer').textContent = `${m}:${s}`;
+}
+function renderQuizQuestion(){
+  const q = QUESTIONS[quiz.order[quiz.idx]];
+  document.getElementById('qCount').textContent = `سؤال ${quiz.idx+1} من ${QUESTIONS.length}`;
+  const tag = q.type==='tf' ? 'صح ام غلط' : (q.type==='fill' ? 'اكمل' : 'اختر الإجابة الصحيحة');
+  document.getElementById('qType').textContent = tag;
+  document.getElementById('qText').textContent = q.q;
+  const optDiv = document.getElementById('qOptions');
+  optDiv.innerHTML = "";
+  if(q.type==='tf'){
+    ["صح","غلط"].forEach(opt=>{
+      const b = document.createElement('button');
+      b.className = 'opt-btn'; b.textContent = opt;
+      b.onclick = ()=>answerQuiz(opt===q.a);
+      optDiv.appendChild(b);
+    });
+  } else if(q.type==='mc'){
+    shuffle(q.opts).forEach(opt=>{
+      const b = document.createElement('button');
+      b.className = 'opt-btn'; b.textContent = opt;
+      b.onclick = ()=>answerQuiz(opt===q.a);
+      optDiv.appendChild(b);
+    });
+  } else { // fill
+    const row = document.createElement('div');
+    row.className = 'fill-row';
+    row.innerHTML = `<input type="text" id="fillInput" placeholder="اكتب إجابتك"><button class="btn">تأكيد</button>`;
+    optDiv.appendChild(row);
+    row.querySelector('button').onclick = ()=>{
+      const val = document.getElementById('fillInput').value;
+      answerQuiz(answersMatch(val, q.a));
+    };
+  }
+}
+function answerQuiz(correct){
+  if(correct) quiz.score++;
+  quiz.idx++;
+  if(quiz.idx >= QUESTIONS.length){
+    clearInterval(quiz.timerId);
+    finishQuiz(false);
+  } else {
+    renderQuizQuestion();
+  }
+}
+function finishQuiz(timeUp){
+  navStack.pop();
+  showScreen('screen-quiz-result');
+  document.getElementById('resultTitle').textContent = timeUp ? "⏰ انتهى الوقت! حاول مرة أخرى" : "🎉 انتهت المسابقة";
+  document.getElementById('resultScore').textContent = `${quiz.score} / ${QUESTIONS.length}`;
+  document.getElementById('resultSub').textContent = `نتيجتك في مسابقة ${BOOK_NAME} - ${CHAPTER_NAME}`;
+}
+
+/* ============================================================
+   SAINTS BIO QUIZ (untimed, endless loop, instant feedback)
+   ============================================================ */
+function openSaintsQuiz(){
+  saintsQuizOrder = shuffle(SAINTS.map((_,i)=>i));
+  saintsQuizIdx = 0;
+  showScreen('screen-saints-quiz');
+  renderSaintsQuiz();
+}
+function renderSaintsQuiz(){
+  if(saintsQuizIdx >= saintsQuizOrder.length){
+    saintsQuizOrder = shuffle(SAINTS.map((_,i)=>i));
+    saintsQuizIdx = 0;
+  }
+  const s = SAINTS[saintsQuizOrder[saintsQuizIdx]];
+  document.getElementById('saintsBio').textContent = s.bio;
+  document.getElementById('saintsInput').value = "";
+  document.getElementById('saintsInput').disabled = false;
+  document.getElementById('saintsFeedback').textContent = "";
+  document.getElementById('saintsFeedback').className = "feedback";
+  document.getElementById('saintsNextBtn').style.display = "none";
+  document.getElementById('saintsCheckBtn').style.display = "inline-block";
+}
+function checkSaintsQuiz(){
+  const s = SAINTS[saintsQuizOrder[saintsQuizIdx]];
+  const val = document.getElementById('saintsInput').value;
+  const fb = document.getElementById('saintsFeedback');
+  if(answersMatch(val, s.name)){
+    fb.textContent = "✅ صح!";
+    fb.className = "feedback ok";
+  } else {
+    fb.textContent = "❌ إجابتك خاطئة. الإجابة الصحيحة هي: " + s.name;
+    fb.className = "feedback bad";
+  }
+  document.getElementById('saintsInput').disabled = true;
+  document.getElementById('saintsCheckBtn').style.display = "none";
+  document.getElementById('saintsNextBtn').style.display = "block";
+}
+function nextSaintsQuiz(){
+  saintsQuizIdx++;
+  renderSaintsQuiz();
+}
+
+/* ============================================================
+   SAVED DATA, LOOK, NAVIGATION
+   ============================================================ */
+let puzzleHist = [];
+const THEMES = {
+  navy:["ليلي","#0d2340","#071224","#050c17","207,162,67"],
+  purple:["بنفسجي","#2a1450","#160a2c","#0c0618","190,150,255"],
+  green:["أخضر","#0f3a2c","#08241b","#04140e","120,210,150"],
+  maroon:["نبيتي","#4a1220","#2a0a12","#16050a","230,160,120"]
+};
+function load(k,d){try{const v=localStorage.getItem(k); return v?JSON.parse(v):d;}catch(e){return d;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function persist(){save('cg_state',state);}
+function applyLook(){
+  const t = THEMES[state.bg] || THEMES.navy, r = document.documentElement.style;
+  r.setProperty('--bg1',t[1]); r.setProperty('--bg2',t[2]); r.setProperty('--bg3',t[3]); r.setProperty('--glow',t[4]);
+  r.setProperty('--fs', state.fs || 1);
+}
+function buildBg(){
+  let stars = "";
+  for(let i=0;i<26;i++){
+    const z = 2+Math.random()*4;
+    stars += `<span class="star" style="left:${Math.random()*100}%;width:${z}px;height:${z}px;animation-duration:${9+Math.random()*14}s;animation-delay:-${Math.random()*20}s"></span>`;
+  }
+  document.getElementById('sacredBg').innerHTML = '<div class="rays"></div>' + christSvgMarkup() + stars;
+}
+function enterHome(){
+  document.getElementById('welcomeText').textContent = "مرحبا " + state.name + " 🌟";
+  document.getElementById('churchText').textContent = "كنيسة " + state.church;
+  document.getElementById('verseBanner').textContent = "📖 " + VERSES[Math.floor(Math.random()*VERSES.length)];
+  showScreen('screen-home');
+}
+function goBack(){
+  const cur = document.querySelector('.screen.active').id;
+  if(cur==='screen-puzzle' && puzzleHist.length){
+    const [a,b] = puzzleHist.pop();
+    [puzzleOrder[a],puzzleOrder[b]] = [puzzleOrder[b],puzzleOrder[a]];
+    puzzleSelected = null; renderPuzzle();
+    document.getElementById('puzzleStatus').textContent = "↩️ رجعت خطوة";
+    return;
+  }
+  if(navStack.length>1){ navStack.pop(); showScreen(navStack[navStack.length-1], true); }
+  else showScreen('screen-home');
+}
+
+/* ===== Settings ===== */
+function openSettings(){
+  if(document.querySelector('.screen.active').id==='screen-settings') return;
+  document.getElementById('setName').value = state.name;
+  document.getElementById('setChurch').value = state.church;
+  document.getElementById('setMsg').textContent = "";
+  renderBgOpts(); updateFsVal();
+  showScreen('screen-settings');
+}
+function renderBgOpts(){
+  document.getElementById('bgOpts').innerHTML = Object.keys(THEMES).map(k=>{
+    const t = THEMES[k];
+    return `<button class="bg-opt ${ (state.bg||'navy')===k ? 'sel':''}" style="background:linear-gradient(180deg,${t[1]},${t[3]})" onclick="setBg('${k}')">${t[0]}</button>`;
+  }).join("");
+}
+function setBg(k){state.bg=k; persist(); applyLook(); renderBgOpts();}
+function updateFsVal(){document.getElementById('fsVal').textContent = Math.round((state.fs||1)*100)+"%";}
+function changeFs(d){
+  state.fs = Math.min(1.5, Math.max(0.8, Math.round(((state.fs||1)+d)*10)/10));
+  persist(); applyLook(); updateFsVal();
+}
+function saveSettingsForm(){
+  const n = document.getElementById('setName').value.trim(), c = document.getElementById('setChurch').value.trim();
+  if(!n || !c){ alert("من فضلك اكتب اسمك واسم كنيستك"); return; }
+  state.name = n; state.church = c; persist();
+  document.getElementById('welcomeText').textContent = "مرحبا " + n + " 🌟";
+  document.getElementById('churchText').textContent = "كنيسة " + c;
+  document.getElementById('setMsg').textContent = "✅ تم الحفظ";
+}
+
+/* ============================================================
+   RITES & HYMNS EXAM (10 questions / 10 minutes)
+   ============================================================ */
+const RITE_Q = [
+  {q:"ما معنى كلمة «كيرياليسون» التي نرددها في الكنيسة؟", opts:["يا رب ارحم","المجد لله","آمين","قدوس قدوس قدوس"], a:"يا رب ارحم"},
+  {q:"ما معنى كلمة «ألليلويا»؟", opts:["سبحوا الرب","ارحمنا يا الله","المسيح قام","السلام لكم"], a:"سبحوا الرب"},
+  {q:"ما معنى كلمة «ثيؤتوكوس» في ألحان العذراء؟", opts:["والدة الإله","ملكة السماء","أم النور","عذراء قديسة"], a:"والدة الإله"},
+  {q:"ما معنى «خريستوس آنستي» التي نرددها في العيد؟", opts:["المسيح قام","المسيح ولد","المسيح صعد","المسيح معنا"], a:"المسيح قام"},
+  {q:"«قدوس الله، قدوس القوي، قدوس الحي الذي لا يموت» تسمى:", opts:["ثلاث تقديسات","الهوس الأول","مجمع القديسين","مرد الإنجيل"], a:"ثلاث تقديسات"},
+  {q:"كم عدد أسرار الكنيسة المقدسة؟", opts:["7","5","12","3"], a:"7"},
+  {q:"القداسات الثلاثة في كنيستنا هي: الباسيلي والغريغوري و...؟", opts:["الكيرلسي","الأثناسي","الأنطوني","المرقسي الصغير"], a:"الكيرلسي"},
+  {q:"كم عدد صلوات الأجبية (صلوات الساعات) في اليوم؟", opts:["7","3","5","9"], a:"7"},
+  {q:"تسبحة نصف الليل مأخوذة من مثل:", opts:["العذارى العشر","السامري الصالح","الابن الضال","الزارع"], a:"العذارى العشر"},
+  {q:"السر الذي يُمسح فيه المعمَّد بالزيت المقدس بعد المعمودية هو:", opts:["سر الميرون","سر الزيجة","سر الكهنوت","سر مسحة المرضى"], a:"سر الميرون"}
+];
+const CHEER = {
+  top:["ما شاء الله! أنت فعلا بتعرف طقس كنيستك وألحانها 🌟","ممتاز جدا! ربنا يبارك فيك وفي صوتك وخدمتك 🎶"],
+  good:["جميل جدا! شوية مراجعة كمان وتوصل للدرجة النهائية 👏","شغل حلو! كمل وربنا يزيدك معرفة 🙏"],
+  mid:["بداية كويسة! راجع الألحان وجرب تاني وهتتحسن 💪","كل مرة بتتعلم حاجة جديدة، كمل ومتقفش 🌱"],
+  low:["ولا يهمك، المهم إنك بتحاول! جرب تاني والرب يعينك 🕊️","كل خطوة تعلم بتقربك أكتر لكنيستك، حاول مرة تانية ❤️"]
+};
+let rite = {order:[], idx:0, score:0, left:600, t:null};
+function riteBest(){return load('cg_rite_best',null);}
+function openRiteIntro(){
+  const b = riteBest();
+  document.getElementById('riteBestIntro').textContent = b===null ? "لسه مفيش نتيجة محفوظة" : `أعلى نتيجة: ${b} / ${RITE_Q.length}`;
+  showScreen('screen-rite-intro');
+}
+function fmtTime(t){return String(Math.floor(t/60)).padStart(2,'0')+":"+String(t%60).padStart(2,'0');}
+function startRite(){
+  rite.order = shuffle(RITE_Q.map((_,i)=>i)); rite.idx = 0; rite.score = 0; rite.left = 600;
+  showScreen('screen-rite-quiz'); renderRite();
+  document.getElementById('rTimer').textContent = fmtTime(rite.left);
+  clearInterval(rite.t);
+  rite.t = setInterval(()=>{
+    rite.left--; document.getElementById('rTimer').textContent = fmtTime(rite.left);
+    if(rite.left<=0) finishRite(true);
+  },1000);
+}
+function renderRite(){
+  const q = RITE_Q[rite.order[rite.idx]];
+  document.getElementById('rCount').textContent = `سؤال ${rite.idx+1} من ${RITE_Q.length}`;
+  document.getElementById('rText').textContent = q.q;
+  const box = document.getElementById('rOptions'); box.innerHTML = "";
+  shuffle(q.opts).forEach(o=>{
+    const b = document.createElement('button');
+    b.className = 'opt-btn'; b.textContent = o;
+    b.onclick = ()=>{ if(o===q.a) rite.score++; rite.idx++; rite.idx>=RITE_Q.length ? finishRite(false) : renderRite(); };
+    box.appendChild(b);
+  });
+}
+function finishRite(timeUp){
+  clearInterval(rite.t);
+  navStack.pop();
+  const best = riteBest(), isNew = best===null || rite.score>best;
+  if(isNew) save('cg_rite_best', rite.score);
+  const n = RITE_Q.length, sc = rite.score;
+  const arr = sc>=9 ? CHEER.top : sc>=7 ? CHEER.good : sc>=4 ? CHEER.mid : CHEER.low;
+  document.getElementById('riteTitle').textContent = timeUp ? "⏰ انتهى الوقت" : "🎉 انتهى الامتحان";
+  document.getElementById('riteScore').textContent = `${sc} / ${n}`;
+  document.getElementById('riteBest').textContent = `أعلى نتيجة: ${Math.max(sc,best||0)} / ${n}` + (isNew ? " 🏆 رقم جديد!" : "");
+  document.getElementById('riteCheer').textContent = arr[Math.floor(Math.random()*arr.length)];
+  showScreen('screen-rite-result');
+}
+
+
+/* ============================================================
+   PORTRAITS (رسومات أيقونية), PUZZLE IMAGES, HEROES, SEARCH
+   ============================================================ */
+const PALETTE = ["#7a3b1f","#2f4f2f","#4a3728","#8a2f4a","#1f4a4a","#3a2f6e","#2f5a6e","#6e2f5a","#5a4a2a","#5a3a1f"];
+function kindOf(n){
+  n = n||"";
+  if(/البابا/.test(n)) return 'p';
+  if(/الأنبا|الانبا/.test(n)) return 'h';
+  if(/القديسة|السيدة/.test(n)) return 'f';
+  return 'm';
+}
+function hashN(n){let h=0; for(const c of n) h=(h*31+c.charCodeAt(0))>>>0; return h;}
+function portrait(name){
+  const k = kindOf(name), col = PALETTE[hashN(name)%PALETTE.length], skin = "#e8c9a0";
+  let top = "", hair = "";
+  if(k==='h') top = `<path d="M30 62 Q60 8 90 62 Q60 50 30 62Z" fill="#1c150b"/>`;
+  else if(k==='p') top = `<path d="M40 48 L60 6 L80 48Z" fill="#cfa243"/><rect x="38" y="46" width="44" height="6" fill="#e8caa0"/>`;
+  else if(k==='f') top = `<path d="M32 70 Q30 20 60 20 Q90 20 88 70 Q74 40 60 40 Q46 40 32 70Z" fill="${col}"/>`;
+  else top = `<path d="M40 44 Q60 22 80 44 Q60 36 40 44Z" fill="#3a2a18"/>`;
+  return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="120" fill="#0b1c33"/>
+  <circle cx="60" cy="50" r="40" fill="#cfa243" opacity=".35"/><circle cx="60" cy="50" r="34" fill="none" stroke="#e8caa0" stroke-width="3"/>
+  <path d="M14 120 Q18 78 60 74 Q102 78 106 120Z" fill="${col}"/><path d="M60 78 L60 120 M48 92 L72 92" stroke="#cfa243" stroke-width="4"/>
+  <ellipse cx="60" cy="52" rx="19" ry="23" fill="${skin}"/>${top}
+  <circle cx="53" cy="52" r="2" fill="#1c150b"/><circle cx="67" cy="52" r="2" fill="#1c150b"/><path d="M54 62 Q60 66 66 62" stroke="#8a5a3a" stroke-width="2" fill="none"/></svg>`;
+}
+let puzzleLevel = 0;
+const PUZ_SVGS = [christSvgMarkup, ...SAINTS.map(s=>()=>portrait(s.name))];
+
+const NEW_HEROES = [["الأنبا مقار الكبير", "من أعظم آباء الرهبنة، وُلد في شبشير بالمنوفية وترك العالم إلى برية شيهيت (وادي النطرون)، فاجتمع حوله رهبان كثيرون صاروا أبناءه. عُرف بالصلاة الدائمة والنسك الشديد وطول الأناة."], ["الأنبا شنودة رئيس المتوحدين", "رئيس الدير الأبيض بسوهاج، وعاش أكثر من مئة سنة في خدمة الرهبان والفقراء. رافق البابا كيرلس إلى مجمع أفسس، وكان قويا في الدفاع عن الإيمان وعن المظلومين."], ["الأنبا باخوميوس أبو الشركة", "كان جنديا رومانيا، رأى محبة المسيحيين للغرباء فآمن واعتمد ثم صار راهبا. أسس أول أديرة الشركة في صعيد مصر ووضع لها قوانين، فلُقب بأبي الشركة."], ["القديس مرقس الرسول", "أحد كاتبي الأناجيل وكاروز الديار المصرية، بشّر بالمسيح في الإسكندرية وأسس كنيستها وصار أول بابا لها. استشهد على يد الوثنيين الذين سحلوه في شوارع المدينة."], ["مار مرقوريوس أبو سيفين", "جندي روماني شجاع، تقول سيرته إن ملاكا أعطاه سيفا في حرب فانتصر، فلُقب أبو سيفين. ثبت على إيمانه بالمسيح ونال إكليل الشهادة."], ["السيدة العذراء مريم", "والدة الإله، بشّرها الملاك جبرائيل بميلاد المسيح. هربت بالطفل يسوع مع يوسف إلى مصر فباركت أرضها، وتكرّمها كنيستنا في أعياد وألحان كثيرة."], ["القديس يوحنا المعمدان", "ابن زكريا وأليصابات وسابق المسيح، دعا الناس للتوبة وعمّد الرب يسوع في نهر الأردن. وبّخ الملك هيرودس على خطيته فاستشهد بقطع رأسه."], ["القديس استفانوس رئيس الشمامسة", "أحد الشمامسة السبعة، كان ممتلئا إيمانا وروحا قدسا. رجمه اليهود بالحجارة وهو يصلي لأجلهم، فكان أول شهيد في المسيحية."], ["القديس يوحنا ذهبي الفم", "بطريرك القسطنطينية، لُقب ذهبي الفم لفصاحته في الوعظ. انتقد الظلم والترف فنُفي ظلما، وتنيّح في طريق المنفى وهو يشكر الله."], ["القديس باسيليوس الكبير", "أسقف قيصرية الكبادوك، دافع عن الإيمان القويم واعتنى بالفقراء والمرضى. تُنسب إليه الليتورجية التي نصليها في القداس الباسيلي."], ["القديس غريغوريوس الثيؤلوغوس", "لُقب بالثيؤلوغوس أي اللاهوتي لعمق تعليمه عن الثالوث القدوس. كان أسقفا للقسطنطينية، وتُنسب إليه الليتورجية الغريغورية في كنيستنا."], ["البابا كيرلس السادس", "البابا ال116، كان الراهب مينا البراموسي وعُرف بحياة الصلاة والقداس اليومي. عمّر دير مارمينا بمريوط وافتتح الكاتدرائية المرقسية بالعباسية، وظهرت العذراء بالزيتون في أيامه."], ["البابا شنودة الثالث", "البابا ال117 ولُقب بمعلم الأجيال، كان واعظا وكاتبا وشاعرا. خدم الكنيسة من سنة 1971 حتى تنيّح في مارس 2012."], ["القديسة مريم المصرية", "عاشت شابة في حياة الخطية بالإسكندرية، ثم تأثرت بقوة التوبة عند كنيسة القيامة بأورشليم. قضت سنين طويلة في برية الأردن في نسك وصلاة، وناولها الأب زوسيما قبل نياحتها."], ["القديس يحنس القصير", "راهب اشتهر بالطاعة والتواضع. أمره أبوه الروحي أن يسقي عصا يابسة كل يوم، فأطاع ثلاث سنين حتى أخضرّت العصا وأثمرت."], ["القديسان مكسيموس ودوماديوس", "تقول سيرتهما إنهما ابنا الإمبراطور فالنتينيان، تركا القصر وحياة الغنى وذهبا إلى برية شيهيت ليتتلمذا للأنبا مقار، وعاشا في الرهبنة والصلاة."], ["القديسة بربارة", "ابنة غنية لأب وثني حبسها في برج ليحميها من الناس، فآمنت بالمسيح واعتمدت. غضب أبوها وسلّمها للحاكم الذي حكم عليها بقطع رأسها، فنالت إكليل الشهادة."], ["القديس أبانوب", "طفل في الثانية عشرة من عمره من قرية نوب بالمنوفية، ثبت في إيمانه رغم صغره وتهديدات الحاكم، فاستشهد وصار قدوة للأطفال في الشجاعة."], ["القديس بولس الرسول", "كان شاول الطرسوسي يضطهد الكنيسة، وظهر له الرب في طريق دمشق فآمن وصار رسول الأمم. كتب رسائل كثيرة وبشّر بلادا عديدة واستشهد في روما."], ["القديس بطرس الرسول", "صياد من الجليل، دعاه الرب فترك الشباك وتبعه، وسماه صفا أي صخرة. قاد الرسل بعد القيامة وبشّر كثيرا، واستشهد في روما."]];
+const SOON_NAMES = ["البابا بطرس خاتم الشهداء", "البابا ديمتريوس الكرام", "البابا ألكسندروس الأول", "البابا ثيؤفيلس", "البابا ديسقورس", "البابا كيرلس الرابع", "القديس ساويرس الأنطاكي", "القديس أندراوس الرسول", "القديس يعقوب الرسول", "القديس يوحنا الحبيب", "القديس توما الرسول", "القديس متى الإنجيلي", "القديس لوقا الإنجيلي", "القديس برنابا الرسول", "القديس تيموثاوس", "القديس تيطس", "القديس فيلبس الرسول", "القديس يوسف النجار", "القديس زكريا الكاهن", "القديس سمعان الشيخ", "القديس لعازر", "القديسة مريم المجدلية", "القديسة مرثا", "القديسة تكلا الرسولة", "القديسة هيلانة", "الملك قسطنطين", "القديسة إيريني", "القديسة صوفيا", "القديسة مارينا", "القديسة يوستينا", "القديسة ثاؤنا", "القديسة إيلارية", "القديس تادرس الأمير", "القديس تادرس المطهر", "القديسان أبادير وإيريني", "القديس سمعان الخراز", "القديس أبو فام الجندي", "القديس يوليوس الأقفهصي", "القديسان سرجيوس وواخس", "القديس بقطر بن رومانوس", "القديس كلوديوس", "الأنبا صرابامون أبو طرحة", "الأنبا بيجول", "الأنبا أبرآم أسقف الفيوم", "الأنبا أرسانيوس", "الأنبا أمونيوس", "الأنبا صموئيل المعترف", "الأنبا يحنس كاما", "الأنبا بموا", "الأنبا بيمن", "الأنبا إيساك", "الأنبا أورسيسيوس", "الأنبا هدرا", "الأنبا سيصوي", "الأنبا بفنوتيوس", "البابا بنيامين الأول", "الأنبا ثيئودوروس", "الأنبا بسادة", "القديس بولس البسيط", "الأنبا رويس", "القديس يوحنا الرحوم", "القديس مار أفرام السرياني", "القديس إكليمنضس الإسكندري", "القديس إيسيذورس", "القديس أغاثون", "القديس سيرابيون", "القديس هيلاريون", "القديس ديديموس الضرير", "القديس إيليا النبي", "الأنبا ويصا"];
+const HEROES = SAINTS.map(s=>({n:s.name,s:s.bio})).concat(NEW_HEROES.map(([n,s])=>({n,s}))).concat(SOON_NAMES.map(n=>({n,s:""})));
+const BLESS = "🙏 بركة صلاته فلتكن معنا آمين";
+
+function openHeroes(){
+  document.getElementById('heroGrid').innerHTML = HEROES.map((h,i)=>`<button class="hero-btn ${h.s?'':'soon'}" onclick="openHero(${i})">${h.n}</button>`).join("");
+  showScreen('screen-heroes');
+}
+function openHero(i){
+  const h = HEROES[i];
+  document.getElementById('heroAvatar').innerHTML = portrait(h.n);
+  document.getElementById('heroName').textContent = h.n;
+  document.getElementById('heroStory').textContent = h.s || "قصته هتتضاف قريبا في التحديث القادم 🕊️";
+  document.getElementById('heroBless').textContent = BLESS;
+  showScreen('screen-hero-story');
+}
+function sn(s){
+  const noise = ["انبا","قديس","قديسه","قديسان","شهيد","شهيده","بابا","مار","ابونا","راهب","رسول","سيده"];
+  return (s||"").replace(/[\u064B-\u0652()]/g,"").replace(/[إأآ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه")
+    .split(/\s+/).map(w=>w.replace(/^ال/,"")).filter(w=>w && !noise.includes(w)).join(" ");
+}
+function doSearch(el){
+  const wrap = el.closest('.searchwrap'), input = wrap.querySelector('input'), msg = wrap.querySelector('.search-msg');
+  const q = sn(input.value);
+  msg.innerHTML = "";
+  if(q.length<2){ msg.textContent = "اكتب اسم القديس أو الشهيد"; return; }
+  const found = HEROES.map((h,i)=>({h,i})).filter(({h})=>{const n=sn(h.n); return n.includes(q)||q.includes(n);});
+  if(!found.length){ msg.textContent = "هذا غير متوفر حاليا"; return; }
+  if(found.length===1){ input.value = ""; openHero(found[0].i); return; }
+  msg.innerHTML = "اختر من النتائج:<br>" + found.slice(0,8).map(({h,i})=>`<button class="chip" onclick="openHero(${i})">${h.n}</button>`).join("");
+}
+
+/* ===== Init ===== */
+Object.assign(state, load('cg_state',{}));
+applyLook(); buildBg();
+if(state.name && state.church) enterHome();
+</script>
+</body>
+</html>
